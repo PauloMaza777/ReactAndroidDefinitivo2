@@ -10,48 +10,103 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Icon } from "react-native-elements";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../App";
 
 const logo2 = require("../../imagenes/logo2.png"); //Logo
-
-export type RootStackParamList = {
-  Login: undefined;
-  UserScreen: undefined;
-};
 
 // Componente principal
 const HomeScreen = (): React.JSX.Element => {
   const drawerRef = useRef<DrawerLayoutAndroid>(null); // Referencia del cajón
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   // Vista del cajón con contenido
   const navigationView = () => (
     <SafeAreaView style={styles.safeAreaNavigation}>
       <View style={[styles.drawerContent, styles.navigationContainer]}>
-        <TouchableOpacity style={styles.drawerButton} onPress={() => {}}>
-          <Icon type="material" name="person" size={35} color="black" />
+        <TouchableOpacity
+          style={styles.drawerButton}
+          onPress={() => {
+            navigation.navigate("UserScreen");
+          }}
+        >
+          <Icon
+            type="material"
+            name="person"
+            size={35}
+            color="black"
+            style={styles.button}
+          />
           <Text style={styles.drawerButtonText}>Perfil</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.drawerContent2, styles.navigationContainer]}>
-        <TouchableOpacity style={styles.drawerButton} onPress={() => {}}>
+      <View
+        style={[
+          styles.drawerContent2,
+          styles.navigationContainer,
+          styles.IconStyle,
+        ]}
+      >
+        <TouchableOpacity
+          style={styles.drawerButton}
+          onPress={() => {
+            navigation.navigate("GroupScreen");
+          }}
+        >
           <Icon type="material" name="group" size={30} color="black" />
           <Text style={styles.drawerButtonText}>Comunidad</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.drawerButton} onPress={() => {}}>
-          <Icon type='material' name='campaign' size={30} color="black" />
+        <TouchableOpacity
+          style={styles.drawerButton}
+          onPress={() => {
+            navigation.navigate("ForoScreen");
+          }}
+        >
+          <Icon type="material" name="campaign" size={30} color="black" />
           <Text style={styles.drawerButtonText}>Foros</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.drawerButton} onPress={() => {}}>
-          <Icon type='material' name='menu-book' size={30} color="black" />
+        <TouchableOpacity
+          style={styles.drawerButton}
+          onPress={() => {
+            navigation.navigate("LibraryScreen");
+          }}
+        >
+          <Icon type="material" name="menu-book" size={30} color="black" />
           <Text style={styles.drawerButtonText}>Biblioteca</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.drawerButton} onPress={() => {}}>
-          <Icon type='material' name='category' size={30} color="black" />
+        <TouchableOpacity
+          style={styles.drawerButton}
+          onPress={() => {
+            navigation.navigate("CategoryScreen");
+          }}
+        >
+          <Icon type="material" name="category" size={30} color="black" />
           <Text style={styles.drawerButtonText}>Categorias</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.drawerButton} onPress={() => {}}>
-          <Icon type='material' name='settings' size={30} color="black" />
+        <TouchableOpacity
+          style={styles.drawerButton}
+          onPress={() => {
+            navigation.navigate("SettingsScreen");
+          }}
+        >
+          <Icon type="material" name="settings" size={30} color="black" />
           <Text style={styles.drawerButtonText}>Configuración</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.contactUser}
+          onPress={() => {
+            navigation.navigate("ContactScreen");
+          }}
+        >
+          <Icon
+            type="material"
+            name="notifications-active"
+            size={30}
+            color="black"
+          />
+          <Text style={styles.drawerButtonText}>Contacto</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -64,8 +119,11 @@ const HomeScreen = (): React.JSX.Element => {
         drawerWidth={300} // Ancho del cajón
         renderNavigationView={navigationView} // Contenido del cajón
       >
-        <TouchableOpacity style={styles.drawerButton} onPress={() => drawerRef.current?.openDrawer()}>
-          <Icon type='material' name='density-medium' size={30} color="black" />
+        <TouchableOpacity
+          style={styles.drawerButton}
+          onPress={() => drawerRef.current?.openDrawer()}
+        >
+          <Icon type="material" name="density-medium" size={30} color="black" />
         </TouchableOpacity>
         <ScrollView>
           <View style={styles.container}>
@@ -73,10 +131,26 @@ const HomeScreen = (): React.JSX.Element => {
           </View>
 
           <View style={styles.container2}>
-            <Boton1 texto="CATEGORÍAS" />
-            <Boton1 texto="NOTICIAS" />
-            <Boton1 texto="PÓDCASTS" />
-            <Boton1 texto="ESPORTS" />
+            <Text style={styles.buttonText}>NOTICIAS</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate("NoticeScreen");
+              }}
+            >
+              <Text style={styles.buttonText}>Agregar Tema</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.container2}>
+            <Text style={styles.buttonText}>E-SPORTS</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate("EsportsScreen");
+              }}
+            >
+              <Text style={styles.buttonText}>Agregar Tema</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </DrawerLayoutAndroid>
@@ -84,20 +158,15 @@ const HomeScreen = (): React.JSX.Element => {
   );
 };
 
-// Componente de botón personalizado
-const Boton1 = ({ texto }: { texto: string }) => (
-  <TouchableOpacity style={styles.button} onPress={() => {}}>
-    <Text style={styles.buttonText}>{texto}</Text>
-  </TouchableOpacity>
-);
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: "#527a8d",
   },
   safeAreaNavigation: {
     flex: 1,
-    backgroundColor: "#ecf0f1",
+    // "#3f6c77"
+    backgroundColor: "#5d8da2",
   },
   container: {
     flex: 1,
@@ -107,6 +176,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 150,
     height: 150,
+    marginBottom: 50,
   },
   container2: {
     flexDirection: "row",
@@ -122,8 +192,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "purple",
-    borderRadius: 50,
-    padding: 8,
+    borderRadius: 10,
+    padding: 5,
     alignItems: "center",
   },
   buttonText: {
@@ -141,18 +211,17 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ecf0f1",
   },
   drawerContent2: {
     justifyContent: "center",
     // alignItems: 'center',
-    backgroundColor: "#ecf0f1",
   },
   drawerText: {
     fontSize: 16,
+
   },
   navigationContainer: {
-    backgroundColor: "#ecf0f1", // Agregamos el estilo para el contenido del cajón
+    backgroundColor: "#5d8da2", // Agregamos el estilo para el contenido del cajón
   },
   drawerButton: {
     flexDirection: "row",
@@ -162,6 +231,14 @@ const styles = StyleSheet.create({
   drawerButtonText: {
     marginLeft: 20,
     fontSize: 18,
+  },
+  IconStyle: {
+    marginLeft: 10,
+  },
+  contactUser: {
+    marginTop: 65,
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 
