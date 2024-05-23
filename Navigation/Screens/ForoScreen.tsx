@@ -4,7 +4,7 @@ import React from 'react';
 const ForoScreen = () => {
   return (
     <View>
-      <Text>GroupScreen</Text>
+      <Text>ForoScreen</Text>
     </View>
   );
 }

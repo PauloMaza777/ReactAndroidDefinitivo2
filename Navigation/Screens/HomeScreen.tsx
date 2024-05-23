@@ -12,6 +12,7 @@ import {
 import { Icon } from "react-native-elements";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
+import { useUser } from "./UserContext";
 
 const logo2 = require("../../imagenes/logo2.png"); //Logo
 
@@ -19,7 +20,7 @@ const logo2 = require("../../imagenes/logo2.png"); //Logo
 const HomeScreen = (): React.JSX.Element => {
   const drawerRef = useRef<DrawerLayoutAndroid>(null); // Referencia del cajón
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const { user } = useUser(); // Obtén el usuario del contexto
   // Vista del cajón con contenido
   const navigationView = () => (
     <SafeAreaView style={styles.safeAreaNavigation}>
@@ -37,7 +38,10 @@ const HomeScreen = (): React.JSX.Element => {
             color="black"
             style={styles.button}
           />
-          <Text style={styles.drawerButtonText}>Perfil</Text>
+          <Text style={styles.drawerButtonText}>
+            Bienvenido{"\n"}
+            {user ? user : "Perfil"}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -184,12 +188,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
   },
-  container3: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
-  },
   button: {
     backgroundColor: "purple",
     borderRadius: 10,
@@ -201,11 +199,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "black",
   },
-  paragraph: {
-    padding: 16,
-    fontSize: 15,
-    textAlign: "center",
-  },
   drawerContent: {
     marginTop: 200,
     marginBottom: 50,
@@ -215,10 +208,6 @@ const styles = StyleSheet.create({
   drawerContent2: {
     justifyContent: "center",
     // alignItems: 'center',
-  },
-  drawerText: {
-    fontSize: 16,
-
   },
   navigationContainer: {
     backgroundColor: "#5d8da2", // Agregamos el estilo para el contenido del cajón
