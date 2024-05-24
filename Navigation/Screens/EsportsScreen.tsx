@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: "bold",
     fontSize: 16,
-    color: "white",
+    color: "black",
   },
   dateText: {
     color: "black",
