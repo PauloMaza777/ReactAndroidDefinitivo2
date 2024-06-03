@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DrawerLayoutAndroid,
   Text,
@@ -6,22 +6,87 @@ import {
   View,
   Image,
   SafeAreaView,
-  ScrollView,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import { useUser } from "./UserContext";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { db } from "../../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
-const logo2 = require("../../imagenes/logo2.png"); //Logo
+const logo2 = require("../../imagenes/logo2.png");
+
+type HomeScreenProps = StackNavigationProp<RootStackParamList, "HomeScreen">;
+type HomeScreenRoute = RouteProp<RootStackParamList, "HomeScreen">;
+
+type HomeProps = {
+  navigation: HomeScreenProps;
+  route: HomeScreenRoute;
+};
+
+// Modelo de Noticia
+interface Notice {
+  id: string;
+  title: string;
+  author: string;
+  date: string;
+  description: string;
+}
 
 // Componente principal
-const HomeScreen = (): React.JSX.Element => {
-  const drawerRef = useRef<DrawerLayoutAndroid>(null); // Referencia del cajón
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { user } = useUser(); // Obtén el usuario del contexto
-  // Vista del cajón con contenido
+function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
+  const drawerRef = useRef<DrawerLayoutAndroid>(null);
+  const { user } = useUser();
+
+  const [notices, setNotices] = useState<Notice[]>([]);
+
+  const noticeItem = ({ item }: { item: Notice }) => (
+    <TouchableOpacity
+      onPress={() => navigation.push("DetailsScreen", { notice: item })}
+    >
+      <View style={{ flexDirection: "row", marginBottom: 10 }}>
+        <View style={{ flexDirection: "column", flexGrow: 9 }}>
+          <Text style={styles.itemTitle}>{item.title}</Text>
+          <Text>{item.author}</Text>
+          <Text>{item.date}</Text>
+          <Text>{item.description}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "noticias"));
+        const fetchedNotices: Notice[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          fetchedNotices.push({
+            id: doc.id,
+            title: data.title,
+            author: data.author,
+            date: data.date,
+            description: data.description,
+          });
+        });
+        setNotices(fetchedNotices);
+      } catch (e) {
+        console.error("Error fetching notices: ", e);
+      }
+    };
+
+    fetchNotices();
+
+    navigation.addListener("focus", () => {
+      fetchNotices();
+    });
+    
+  }, [navigation]);
+
   const navigationView = () => (
     <SafeAreaView style={styles.safeAreaNavigation}>
       <View style={[styles.drawerContent, styles.navigationContainer]}>
@@ -58,7 +123,7 @@ const HomeScreen = (): React.JSX.Element => {
             navigation.navigate("GroupScreen");
           }}
         >
-          <Icon type="material" name="group" size={30} color="black" />
+          <Icon type="material" name="group" size={30} color="#ffffff78" />
           <Text style={styles.drawerButtonText}>Comunidad</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -86,7 +151,7 @@ const HomeScreen = (): React.JSX.Element => {
           }}
         >
           <Icon type="material" name="category" size={30} color="black" />
-          <Text style={styles.drawerButtonText}>Categorias</Text>
+          <Text style={styles.drawerButtonText}>Categorías</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.drawerButton}
@@ -119,9 +184,9 @@ const HomeScreen = (): React.JSX.Element => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <DrawerLayoutAndroid
-        ref={drawerRef} // Referencia del cajón
-        drawerWidth={300} // Ancho del cajón
-        renderNavigationView={navigationView} // Contenido del cajón
+        ref={drawerRef}
+        drawerWidth={300}
+        renderNavigationView={navigationView}
       >
         <TouchableOpacity
           style={styles.drawerButton}
@@ -129,38 +194,41 @@ const HomeScreen = (): React.JSX.Element => {
         >
           <Icon type="material" name="density-medium" size={30} color="black" />
         </TouchableOpacity>
-        <ScrollView>
-          <View style={styles.container}>
-            <Image style={styles.logo} source={logo2} />
-          </View>
-
-          <View style={styles.container2}>
-            <Text style={styles.buttonText}>NOTICIAS</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                navigation.navigate("NoticeScreen");
-              }}
-            >
-              <Text style={styles.buttonText}>Agregar Tema</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.container2}>
-            <Text style={styles.buttonText}>E-SPORTS</Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                navigation.navigate("EsportsScreen");
-              }}
-            >
-              <Text style={styles.buttonText}>Agregar Tema</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+        <View style={styles.container}>
+          <Image style={styles.logo} source={logo2} />
+        </View>
+        <View style={styles.container2}>
+          <Text style={styles.buttonTextT}>NOTICIAS</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate("NoticeScreen");
+            }}
+          >
+            <Text style={styles.buttonText}>Agregar Tema</Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          data={notices}
+          style={styles.lista}
+          renderItem={noticeItem}
+          keyExtractor={(item) => item.id}
+        />
+        <View style={styles.container2}>
+          <Text style={styles.buttonTextT}>E-SPORTS</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate("EsportsScreen");
+            }}
+          >
+            <Text style={styles.buttonText}>Agregar Tema</Text>
+          </TouchableOpacity>
+        </View>
       </DrawerLayoutAndroid>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -169,11 +237,10 @@ const styles = StyleSheet.create({
   },
   safeAreaNavigation: {
     flex: 1,
-    // "#3f6c77"
     backgroundColor: "#5d8da2",
   },
   container: {
-    flex: 1,
+    height: "20%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -197,7 +264,16 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: "bold",
     fontSize: 16,
-    color: "black",
+    color: "white",
+    padding: 5,
+    paddingHorizontal: 10,
+  },
+  buttonTextT: {
+    fontWeight: "bold",
+    fontSize: 32,
+    color: "#ffffff78",
+    padding: 5,
+    paddingHorizontal: 10,
   },
   drawerContent: {
     marginTop: 200,
@@ -207,10 +283,9 @@ const styles = StyleSheet.create({
   },
   drawerContent2: {
     justifyContent: "center",
-    // alignItems: 'center',
   },
   navigationContainer: {
-    backgroundColor: "#5d8da2", // Agregamos el estilo para el contenido del cajón
+    backgroundColor: "#5d8da2",
   },
   drawerButton: {
     flexDirection: "row",
@@ -220,6 +295,7 @@ const styles = StyleSheet.create({
   drawerButtonText: {
     marginLeft: 20,
     fontSize: 18,
+    color: "#ffffff78",
   },
   IconStyle: {
     marginLeft: 10,
@@ -228,6 +304,15 @@ const styles = StyleSheet.create({
     marginTop: 65,
     flexDirection: "row",
     alignItems: "center",
+  },
+  itemTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "black",
+  },
+  lista: {
+    maxHeight: 200,
+    backgroundColor: "#5d8da2",
   },
 });
 

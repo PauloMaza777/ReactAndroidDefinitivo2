@@ -9,6 +9,7 @@ import {
 import { CheckBox, Icon } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 const CategoryScreen = () => {
   const [categories, setCategories] = useState([
     { icon: "gamepad", name: "Videojuegos", checked: false },

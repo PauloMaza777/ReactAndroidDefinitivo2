@@ -12,7 +12,7 @@ import {
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Login from "./Navigation/Screens/Login";
+import Login from "./Navigation/Screens/LoginScreen";
 import UserScreen from "./Navigation/Screens/UserScreen";
 import HomeScreen from "./Navigation/Screens/HomeScreen";
 import SettingsScreen from "./Navigation/Screens/SettingsScreen";
@@ -21,9 +21,11 @@ import GroupScreen from "./Navigation/Screens/GroupScreen";
 import LibraryScreen from "./Navigation/Screens/LibraryScreen";
 import CategoryScreen from "./Navigation/Screens/CategoryScreen";
 import ContactScreen from "./Navigation/Screens/ContactScreen";
-import NoticeScreen from "./Navigation/Screens/Notice";
+import NoticeScreen from "./Navigation/Screens/NoticeScreen";
 import EsportsScreen from "./Navigation/Screens/EsportsScreen";
 import { UserProvider } from "./Navigation/Screens/UserContext";
+import DetailsScreen, {Params as ProductDetailsParams} from "./Navigation/Screens/DetailsScreen";
+// import { CategoriesProvider } from "./Navigation/Screens/CategoryContext";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -39,29 +41,33 @@ export type RootStackParamList = {
   ContactScreen: undefined;
   NoticeScreen: undefined;
   EsportsScreen: undefined;
+  DetailsScreen: ProductDetailsParams;
 };
 
 // Componente principal
 const App = (): React.JSX.Element => {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <UserProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="HomeScreen" component={HomeScreen} />
-            <Stack.Screen name="UserScreen" component={UserScreen} />
-            <Stack.Screen name="GroupScreen" component={GroupScreen} />
-            <Stack.Screen name="ForoScreen" component={ForoScreen} />
-            <Stack.Screen name="LibraryScreen" component={LibraryScreen} />
-            <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
-            <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
-            <Stack.Screen name="ContactScreen" component={ContactScreen} />
-            <Stack.Screen name="NoticeScreen" component={NoticeScreen} />
-            <Stack.Screen name="EsportsScreen" component={EsportsScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </UserProvider>
+      {/* <CategoriesProvider> */}
+        <UserProvider>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Login">
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="HomeScreen" component={HomeScreen} />
+              <Stack.Screen name="UserScreen" component={UserScreen} />
+              <Stack.Screen name="GroupScreen" component={GroupScreen} />
+              <Stack.Screen name="ForoScreen" component={ForoScreen} />
+              <Stack.Screen name="LibraryScreen" component={LibraryScreen} />
+              <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
+              <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+              <Stack.Screen name="ContactScreen" component={ContactScreen} />
+              <Stack.Screen name="NoticeScreen" component={NoticeScreen} />
+              <Stack.Screen name="EsportsScreen" component={EsportsScreen} />
+              <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </UserProvider>
+      {/* </CategoriesProvider> */}
     </SafeAreaView>
   );
 };
