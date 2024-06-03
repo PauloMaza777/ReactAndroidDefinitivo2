@@ -1,21 +1,32 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  Image
+} from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../../firebase"; 
+import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-const NoticeScreen: React.FC = () => {
+const logo2 = require("../../imagenes/logo2.png"); //Logo
+
+const NoticeScreen = (): React.JSX.Element => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [date, setDate] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
 
   const guardarForo = async () => {
     if (!title || !author || !date || !description) {
-      Alert.alert('Error', 'Por favor complete todos los campos');
+      Alert.alert("Error", "Por favor complete todos los campos");
       return;
     }
     try {
@@ -23,81 +34,113 @@ const NoticeScreen: React.FC = () => {
         title: title,
         author: author,
         date: date,
-        description: description
+        description: description,
       });
-      console.log('Documento escrito con ID: ', docRef.id);
-      Alert.alert('Noticia agregada', 'La noticia ha sido agregada con éxito.');
-      setTitle('');
-      setAuthor('');
-      setDate('');
-      setDescription('');
+      console.log("Documento escrito con ID: ", docRef.id);
+      Alert.alert("Noticia agregada", "La noticia ha sido agregada con éxito.");
+      setTitle("");
+      setAuthor("");
+      setDate("");
+      setDescription("");
       navigation.goBack();
     } catch (e) {
-      console.error('Error al agregar el documento: ', e);
-      Alert.alert('Error', 'Hubo un problema al agregar la noticia.');
+      console.error("Error al agregar el documento: ", e);
+      Alert.alert("Error", "Hubo un problema al agregar la noticia.");
     }
-    
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text style={styles.label}>Título</Text>
-        <TextInput
-          style={styles.input}
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Título de la noticia"
-        />
-        <Text style={styles.label}>Autor</Text>
-        <TextInput
-          style={styles.input}
-          value={author}
-          onChangeText={setAuthor}
-          placeholder="Nombre del autor"
-        />
-        <Text style={styles.label}>Fecha</Text>
-        <TextInput
-          style={styles.input}
-          value={date}
-          onChangeText={setDate}
-          placeholder="Fecha (YYYY-MM-DD)"
-        />
-        <Text style={styles.label}>Descripción</Text>
-        <TextInput
-          style={styles.textarea}
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Descripción de la noticia"
-          multiline
-          numberOfLines={4}
-        />
-        <TouchableOpacity style={styles.button} onPress={guardarForo}>
-          <Text style={styles.buttonText}>Agregar Noticia</Text>
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.container}>
+          <Image style={styles.logo} source={logo2} />
+          <Text style={styles.tittle}>AGREGAR NOTICIA</Text>
+          <View style={styles.formContainer}>
+            <Text style={styles.label}>Titulo</Text>
+
+            <TextInput
+              style={styles.textInput}
+              value={title}
+              onChangeText={setTitle}
+              placeholder="Título de la noticia"
+            />
+            <Text style={styles.label}>Autor</Text>
+            <TextInput
+              style={styles.textInput}
+              value={author}
+              onChangeText={setAuthor}
+              placeholder="Nombre del autor"
+            />
+            <Text style={styles.label}>Fecha</Text>
+            <TextInput
+              style={styles.textInput}
+              value={date}
+              onChangeText={setDate}
+              placeholder="Fecha (YYYY-MM-DD)"
+            />
+            <Text style={styles.label}>Descripción</Text>
+            <TextInput
+              style={styles.textInput}
+              value={description}
+              onChangeText={setDescription}
+              placeholder="Descripción de la noticia"
+              multiline
+              numberOfLines={4}
+            />
+            <TouchableOpacity style={styles.button} onPress={guardarForo}>
+              <Text style={styles.buttonText}>Agregar Noticia</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollView: {
+    flexGrow: 1,
+  },
+  safeArea: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#527a8d",
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: 20,
   },
   label: {
     fontSize: 18,
     marginBottom: 8,
   },
-  input: {
-    height: 40,
-    borderColor: "#ccc",
+  formContainer: {
+    width: "90%",
+    backgroundColor: "#e0e0e0",
+    padding: 20,
+    borderRadius: 10,
+  },
+  tittle: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 24,
+    color: "black",
+    marginBottom: 20,
+  },
+  textInput: {
     borderWidth: 1,
-    borderRadius: 5,
-    padding: 8,
-    marginBottom: 16,
-    backgroundColor: "#fff",
+    borderColor: "#ccc",
+    borderRadius: 8,
+    backgroundColor: "white",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    width: "100%",
+    marginVertical: 10,
+    color: "black",
   },
   textarea: {
     height: 80,
@@ -109,15 +152,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   button: {
-    backgroundColor: "#527a8d",
-    borderRadius: 5,
-    padding: 16,
+    backgroundColor: "purple",
+    borderRadius: 10,
+    padding: 10,
     alignItems: "center",
+    marginTop: 20,
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 18,
     fontWeight: "bold",
+    fontSize: 16,
+    color: "black",
   },
 });
 

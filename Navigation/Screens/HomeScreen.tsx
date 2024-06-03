@@ -48,11 +48,11 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
       onPress={() => navigation.push("DetailsScreen", { notice: item })}
     >
       <View style={{ flexDirection: "row", marginBottom: 10 }}>
-        <View style={{ flexDirection: "column", flexGrow: 9 }}>
+        <View style={styles.containerFire}>
           <Text style={styles.itemTitle}>{item.title}</Text>
-          <Text>{item.author}</Text>
-          <Text>{item.date}</Text>
-          <Text>{item.description}</Text>
+          <Text style={styles.itemAuthor}>{item.author}</Text>
+          <Text style={styles.itemDate}>{item.date}</Text>
+          <Text style={styles.itemDesc}>{item.description}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -84,7 +84,6 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
     navigation.addListener("focus", () => {
       fetchNotices();
     });
-    
   }, [navigation]);
 
   const navigationView = () => (
@@ -100,7 +99,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             type="material"
             name="person"
             size={35}
-            color="black"
+            color="#ffffffA0"
             style={styles.button}
           />
           <Text style={styles.drawerButtonText}>
@@ -123,7 +122,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             navigation.navigate("GroupScreen");
           }}
         >
-          <Icon type="material" name="group" size={30} color="#ffffff78" />
+          <Icon type="material" name="group" size={30} color="#ffffffA0" />
           <Text style={styles.drawerButtonText}>Comunidad</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -132,7 +131,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             navigation.navigate("ForoScreen");
           }}
         >
-          <Icon type="material" name="campaign" size={30} color="black" />
+          <Icon type="material" name="campaign" size={30} color="#ffffffA0" />
           <Text style={styles.drawerButtonText}>Foros</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -141,7 +140,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             navigation.navigate("LibraryScreen");
           }}
         >
-          <Icon type="material" name="menu-book" size={30} color="black" />
+          <Icon type="material" name="menu-book" size={30} color="#ffffffA0" />
           <Text style={styles.drawerButtonText}>Biblioteca</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -150,7 +149,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             navigation.navigate("CategoryScreen");
           }}
         >
-          <Icon type="material" name="category" size={30} color="black" />
+          <Icon type="material" name="category" size={30} color="#ffffffA0" />
           <Text style={styles.drawerButtonText}>Categorías</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -159,7 +158,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             navigation.navigate("SettingsScreen");
           }}
         >
-          <Icon type="material" name="settings" size={30} color="black" />
+          <Icon type="material" name="settings" size={30} color="#ffffffA0" />
           <Text style={styles.drawerButtonText}>Configuración</Text>
         </TouchableOpacity>
 
@@ -173,7 +172,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             type="material"
             name="notifications-active"
             size={30}
-            color="black"
+            color="#ffffffA0"
           />
           <Text style={styles.drawerButtonText}>Contacto</Text>
         </TouchableOpacity>
@@ -295,7 +294,7 @@ const styles = StyleSheet.create({
   drawerButtonText: {
     marginLeft: 20,
     fontSize: 18,
-    color: "#ffffff78",
+    color: "#ffffffA0",
   },
   IconStyle: {
     marginLeft: 10,
@@ -307,12 +306,43 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 20,
     color: "black",
+    alignSelf: "center",
+    marginBottom: 30,
+  },
+  itemAuthor: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "black",
+
+  },
+  itemDate: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "black",
+    alignSelf: "flex-end",
+    marginBottom: 30,
+  },
+  itemDesc: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "black",
+    marginBottom: 30,
   },
   lista: {
     maxHeight: 200,
-    backgroundColor: "#5d8da2",
+    backgroundColor: "#527a8d",
+    marginTop: 10
+  },
+  containerFire: {
+    flexDirection: "column",
+    flexGrow: 9,
+    marginLeft: 10,
+    marginTop: 10,
+    marginRight: 10,
+    backgroundColor: "#5d8da2"
+    
   },
 });
 
