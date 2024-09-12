@@ -7,36 +7,47 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
+import { db } from "../../firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 const logo2 = require("../../imagenes/logo2.png"); //Logo
 
 const NoticeScreen = (): React.JSX.Element => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
-  };
-
-  const handleSubmit = () => {
-    // Aquí iría la lógica para enviar los datos a la API
-    console.log({ title, author, date, description });
-
-    // Limpiar los campos después de agregar el tema
-    setTitle("");
-    setAuthor("");
-    setDate(new Date());
-    setDescription("");
+  const guardarForo = async () => {
+    if (!title || !author || !date || !description) {
+      Alert.alert("Error", "Por favor complete todos los campos");
+      return;
+    }
+    try {
+      const docRef = await addDoc(collection(db, "esport"), {
+        title: title,
+        author: author,
+        date: date,
+        description: description,
+      });
+      console.log("Documento escrito con ID: ", docRef.id);
+      Alert.alert("E-sport agregada", "La E-sport ha sido agregada con éxito.");
+      setTitle("");
+      setAuthor("");
+      setDate("");
+      setDescription("");
+      navigation.goBack();
+    } catch (e) {
+      console.error("Error al agregar el documento: ", e);
+      Alert.alert("Error", "Hubo un problema al agregar el E-sport.");
+    }
   };
 
   return (
@@ -46,19 +57,31 @@ const NoticeScreen = (): React.JSX.Element => {
           <Image style={styles.logo} source={logo2} />
           <Text style={styles.tittle}>AGREGAR E-SPORT</Text>
           <View style={styles.formContainer}>
+            <Text style={styles.label}>Titulo</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="Título"
+              placeholder="Título de la noticia"
               value={title}
               onChangeText={setTitle}
             />
+            <Text style={styles.label}>Autor</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="Autor"
+              placeholder="Nombre del Autor"
               value={author}
               onChangeText={setAuthor}
             />
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.textInput}>
+            <Text style={styles.label}>Fecha</Text>
+            <TextInput
+              style={styles.textInput}
+              value={date}
+              onChangeText={setDate}
+              placeholder="Fecha (YYYY-MM-DD)"
+            />
+            {/* <TouchableOpacity
+              onPress={() => setShowDatePicker(true)}
+              style={styles.textInput}
+            >
               <Text style={styles.dateText}>{date.toDateString()}</Text>
             </TouchableOpacity>
             {showDatePicker && (
@@ -68,15 +91,16 @@ const NoticeScreen = (): React.JSX.Element => {
                 display="default"
                 onChange={handleDateChange}
               />
-            )}
+            )} */}
             <TextInput
               style={[styles.textInput, styles.textArea]}
               placeholder="Descripción"
               value={description}
               onChangeText={setDescription}
               multiline
+              numberOfLines={4}
             />
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <TouchableOpacity style={styles.button} onPress={guardarForo}>
               <Text style={styles.buttonText}>Agregar E-Sport</Text>
             </TouchableOpacity>
           </View>
@@ -148,5 +172,9 @@ const styles = StyleSheet.create({
     color: "black",
     paddingHorizontal: 15,
     paddingVertical: 10,
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 8,
   },
 });

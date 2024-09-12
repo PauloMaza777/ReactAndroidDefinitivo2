@@ -7,7 +7,9 @@
 //   const [selectedCategories, setSelectedCategories] = useState([]);
 
 //   return (
-//     <CategoriesContext.Provider value={{ selectedCategories, setSelectedCategories }}>
+//     <CategoriesContext.Provider
+//       value={{ selectedCategories, setSelectedCategories }}
+//     >
 //       {children}
 //     </CategoriesContext.Provider>
 //   );

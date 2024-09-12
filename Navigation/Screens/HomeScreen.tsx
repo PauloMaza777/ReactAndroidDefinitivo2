@@ -35,6 +35,13 @@ interface Notice {
   date: string;
   description: string;
 }
+interface Esport {
+  id: string;
+  title: string;
+  author: string;
+  date: string;
+  description: string;
+}
 
 // Componente principal
 function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
@@ -42,10 +49,26 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
   const { user } = useUser();
 
   const [notices, setNotices] = useState<Notice[]>([]);
+  const [esports, setEsports] = useState<Esport[]>([]);
 
   const noticeItem = ({ item }: { item: Notice }) => (
     <TouchableOpacity
       onPress={() => navigation.push("DetailsScreen", { notice: item })}
+    >
+      <View style={{ flexDirection: "row", marginBottom: 10 }}>
+        <View style={styles.containerFire}>
+          <Text style={styles.itemTitle}>{item.title}</Text>
+          <Text style={styles.itemAuthor}>{item.author}</Text>
+          <Text style={styles.itemDate}>{item.date}</Text>
+          <Text style={styles.itemDesc}>{item.description}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const esportItem = ({ item }: { item: Esport }) => (
+    <TouchableOpacity
+      onPress={() => navigation.push("DetailsScreenDos", { esport: item })}
     >
       <View style={{ flexDirection: "row", marginBottom: 10 }}>
         <View style={styles.containerFire}>
@@ -83,6 +106,34 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
 
     navigation.addListener("focus", () => {
       fetchNotices();
+    });
+  }, [navigation]);
+
+  useEffect(() => {
+    const fetchEsports = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "esport"));
+        const fetchedEsports: Esport[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          fetchedEsports.push({
+            id: doc.id,
+            title: data.title,
+            author: data.author,
+            date: data.date,
+            description: data.description,
+          });
+        });
+        setEsports(fetchedEsports);
+      } catch (e) {
+        console.error("Error fetching esport: ", e);
+      }
+    };
+
+    fetchEsports();
+
+    navigation.addListener("focus", () => {
+      fetchEsports();
     });
   }, [navigation]);
 
@@ -224,6 +275,12 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             <Text style={styles.buttonText}>Agregar Tema</Text>
           </TouchableOpacity>
         </View>
+        <FlatList
+          data={esports}
+          style={styles.lista}
+          renderItem={esportItem}
+          keyExtractor={(item) => item.id}
+        />
       </DrawerLayoutAndroid>
     </SafeAreaView>
   );
@@ -252,7 +309,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginTop: 10,
   },
   button: {
     backgroundColor: "purple",
@@ -315,7 +371,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 14,
     color: "black",
-
   },
   itemDate: {
     fontWeight: "bold",
@@ -333,7 +388,7 @@ const styles = StyleSheet.create({
   lista: {
     maxHeight: 200,
     backgroundColor: "#527a8d",
-    marginTop: 10
+    marginTop: 10,
   },
   containerFire: {
     flexDirection: "column",
@@ -341,8 +396,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 10,
     marginRight: 10,
-    backgroundColor: "#5d8da2"
-    
+    backgroundColor: "#5d8da2",
   },
 });
 

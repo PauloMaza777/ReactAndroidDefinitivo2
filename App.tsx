@@ -25,6 +25,7 @@ import NoticeScreen from "./Navigation/Screens/NoticeScreen";
 import EsportsScreen from "./Navigation/Screens/EsportsScreen";
 import { UserProvider } from "./Navigation/Screens/UserContext";
 import DetailsScreen, {Params as ProductDetailsParams} from "./Navigation/Screens/DetailsScreen";
+import DetailsScreenDos, {Params as ProductDetailsParamsDos} from "./Navigation/Screens/DetailsScreenDos";
 // import { CategoriesProvider } from "./Navigation/Screens/CategoryContext";
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -42,6 +43,7 @@ export type RootStackParamList = {
   NoticeScreen: undefined;
   EsportsScreen: undefined;
   DetailsScreen: ProductDetailsParams;
+  DetailsScreenDos: ProductDetailsParamsDos;
 };
 
 // Componente principal
@@ -64,6 +66,7 @@ const App = (): React.JSX.Element => {
               <Stack.Screen name="NoticeScreen" component={NoticeScreen} />
               <Stack.Screen name="EsportsScreen" component={EsportsScreen} />
               <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+              <Stack.Screen name="DetailsScreenDos" component={DetailsScreenDos} />
             </Stack.Navigator>
           </NavigationContainer>
         </UserProvider>

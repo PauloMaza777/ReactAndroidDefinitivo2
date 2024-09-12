@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Notice } from "../model/Notices";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -9,31 +8,31 @@ import { Esport } from "../model/Esport";
 const logo2 = require("../../imagenes/logo2.png"); //Logo
 
 export type Params = {
-  notice: Notice;
+  esport: Esport;
 };
 
 export type Props = {
-  route: RouteProp<RootStackParamList, "DetailsScreen">;
-  navigation: StackNavigationProp<RootStackParamList, "DetailsScreen">;
+  route: RouteProp<RootStackParamList, "DetailsScreenDos">;
+  navigation: StackNavigationProp<RootStackParamList, "DetailsScreenDos">;
 };
 
 function DetailsScreen({ route }: Props): React.JSX.Element {
-  const [notice, setNotice] = useState<Notice>();
+  const [esport, setEsport] = useState<Esport>();
   useEffect(() => {
-    setNotice(route.params.notice);
+    setEsport(route.params.esport);
   }, [route]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {notice && (
+      {esport && (
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.container}>
             <Image style={styles.logo} source={logo2} />
 
-            <Text style={styles.textInput}>TITULO: {notice.title}</Text>
-            <Text style={styles.textInput}>AUTOR: {notice.author}</Text>
-            <Text style={styles.textInput}>FECHA: {notice.date}</Text>
-            <Text style={styles.textInput}>DESCRIPCIÓN: {notice.description}</Text>
+            <Text style={styles.textInput}>TITULO: {esport.title}</Text>
+            <Text style={styles.textInput}>AUTOR: {esport.author}</Text>
+            <Text style={styles.textInput}>FECHA: {esport.date}</Text>
+            <Text style={styles.textInput}>DESCRIPCIÓN: {esport.description}</Text>
           </View>
         </ScrollView>
       )}
