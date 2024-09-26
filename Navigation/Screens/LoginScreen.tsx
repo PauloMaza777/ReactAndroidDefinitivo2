@@ -12,7 +12,9 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Icon } from "react-native-elements";
 import { useUser } from "./UserContext"; // Importa el contexto de usuario
-import RegisterScreen from "./RegisterScreen";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebase"; // Importa la configuración de Firebase
+import RegisterScreen from "./RegisterScreen"; // Importa la pantalla de registro
 
 type RootStackParamList = {
   HomeScreen: undefined;
@@ -31,16 +33,48 @@ function Login({ navigation }: LoginProps): React.JSX.Element {
   const [contrasena, setContrasena] = useState("");
   const { setUser } = useUser(); // Obtén el setter del usuario del contexto
 
-  const btnRegister = function () {
+  const btnRegister = () => {
     navigation.navigate("RegisterScreen");
   };
-  const btnIngresarOnPress = function () {
-    if (usuario && contrasena) {
-      setUser(usuario); // Guarda el nombre de usuario en el contexto
-      navigation.replace("HomeScreen");
+
+  const btnIngresarOnPress = async () => {
+    if (!usuario || !contrasena) {
+      Alert.alert("Error", "Por favor ingrese su correo y contraseña");
       return;
     }
-    Alert.alert("Fallido", "Datos incorrectos...");
+
+    try {
+      // Crear la consulta para encontrar el usuario con el correo ingresado
+      const q = query(
+        collection(db, "registro"),
+        where("email", "==", usuario)
+      );
+      const querySnapshot = await getDocs(q);
+
+      // Si el correo no está en la base de datos, mostrar error
+      if (querySnapshot.empty) {
+        Alert.alert("Error", "Correo electrónico no encontrado");
+        return;
+      }
+
+      let usuarioEncontrado = false;
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        // Validar la contraseña
+        if (data.password === contrasena) {
+          usuarioEncontrado = true;
+          setUser(usuario); // Guarda el usuario en el contexto
+          navigation.replace("HomeScreen");
+        }
+      });
+
+      if (!usuarioEncontrado) {
+        Alert.alert("Error", "Contraseña incorrecta");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión: ", error);
+      Alert.alert("Error", "Hubo un problema al iniciar sesión");
+    }
   };
 
   return (
@@ -57,6 +91,7 @@ function Login({ navigation }: LoginProps): React.JSX.Element {
             placeholder="Correo Electrónico"
             placeholderTextColor="#828894"
             onChangeText={(u) => setUsuario(u)}
+            value={usuario}
             keyboardType="email-address"
           />
         </View>
@@ -68,6 +103,7 @@ function Login({ navigation }: LoginProps): React.JSX.Element {
             placeholderTextColor="#828894"
             secureTextEntry={true}
             onChangeText={(p) => setContrasena(p)}
+            value={contrasena}
           />
         </View>
 
@@ -90,14 +126,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#323844",
   },
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    // flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   logoContainer: {
     alignItems: "center",
     marginTop: 0,
@@ -109,7 +137,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 20,
     marginLeft: 20,
-    // marginHorizontal: ,
     marginTop: 20,
   },
   title: {
@@ -117,7 +144,6 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 25,
   },
-
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
