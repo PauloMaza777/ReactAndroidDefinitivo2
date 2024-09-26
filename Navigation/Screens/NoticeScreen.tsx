@@ -7,10 +7,12 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
-  Image
+  Image,
+  ActivityIndicator, // Para mostrar feedback de carga
 } from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
@@ -23,6 +25,8 @@ const NoticeScreen = (): React.JSX.Element => {
   const [author, setAuthor] = useState("");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false); // Estado para mostrar loading
+  const [showDatePicker, setShowDatePicker] = useState(false); // Estado para el selector de fecha
 
   const guardarForo = async () => {
     if (!title || !author || !date || !description) {
@@ -30,11 +34,12 @@ const NoticeScreen = (): React.JSX.Element => {
       return;
     }
     try {
+      setLoading(true); // Iniciar loading
       const docRef = await addDoc(collection(db, "noticias"), {
-        title: title,
-        author: author,
-        date: date,
-        description: description,
+        title,
+        author,
+        date,
+        description,
       });
       console.log("Documento escrito con ID: ", docRef.id);
       Alert.alert("Noticia agregada", "La noticia ha sido agregada con éxito.");
@@ -42,9 +47,11 @@ const NoticeScreen = (): React.JSX.Element => {
       setAuthor("");
       setDate("");
       setDescription("");
+      setLoading(false); // Finalizar loading
       navigation.goBack();
     } catch (e) {
       console.error("Error al agregar el documento: ", e);
+      setLoading(false); // Finalizar loading en caso de error
       Alert.alert("Error", "Hubo un problema al agregar la noticia.");
     }
   };
@@ -56,8 +63,8 @@ const NoticeScreen = (): React.JSX.Element => {
           <Image style={styles.logo} source={logo2} />
           <Text style={styles.tittle}>AGREGAR NOTICIA</Text>
           <View style={styles.formContainer}>
+            
             <Text style={styles.label}>Titulo</Text>
-
             <TextInput
               style={styles.textInput}
               value={title}
@@ -72,12 +79,26 @@ const NoticeScreen = (): React.JSX.Element => {
               placeholder="Nombre del autor"
             />
             <Text style={styles.label}>Fecha</Text>
-            <TextInput
+            <TouchableOpacity
               style={styles.textInput}
-              value={date}
-              onChangeText={setDate}
-              placeholder="Fecha (YYYY-MM-DD)"
-            />
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Text style={styles.dateText}>
+                {date ? date : "Fecha de la noticia"}
+              </Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  setShowDatePicker(false);
+                  const currentDate = selectedDate || new Date();
+                  setDate(currentDate.toISOString().split("T")[0]); // Formato YYYY-MM-DD
+                }}
+              />
+            )}
             <Text style={styles.label}>Descripción</Text>
             <TextInput
               style={styles.textInput}
@@ -87,8 +108,12 @@ const NoticeScreen = (): React.JSX.Element => {
               multiline
               numberOfLines={4}
             />
-            <TouchableOpacity style={styles.button} onPress={guardarForo}>
-              <Text style={styles.buttonText}>Agregar Noticia</Text>
+            <TouchableOpacity style={styles.button} onPress={guardarForo} disabled={loading}>
+            {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text style={styles.buttonText}>Agregar Noticia</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -157,6 +182,11 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
     marginTop: 20,
+  },
+  dateText: {
+    color: "black",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   buttonText: {
     fontWeight: "bold",

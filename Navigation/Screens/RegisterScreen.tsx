@@ -11,36 +11,44 @@ import {
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Icon } from "react-native-elements";
-import { useUser } from "./UserContext"; // Importa el contexto de usuario
-import RegisterScreen from "./RegisterScreen";
+import { db } from "../../firebase"; // Asegúrate de que la configuración de Firebase esté correcta
+import { collection, addDoc } from "firebase/firestore";
 
 type RootStackParamList = {
   HomeScreen: undefined;
   Login: undefined;
-  RegisterScreen: undefined;
+  Register: undefined; // Asegúrate de añadir esta línea
 };
 
-type LoginProps = {
-  navigation: StackNavigationProp<RootStackParamList, "HomeScreen">;
+type RegisterProps = {
+  navigation: StackNavigationProp<RootStackParamList, "Login">; // Navegación hacia la pantalla de login
 };
 
 const logo2 = require("../../imagenes/logo2.png"); // Logo
 
-function Login({ navigation }: LoginProps): React.JSX.Element {
-  const [usuario, setUsuario] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const { setUser } = useUser(); // Obtén el setter del usuario del contexto
+const RegisterScreen = ({ navigation }: RegisterProps): React.JSX.Element => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const btnRegister = function () {
-    navigation.navigate("RegisterScreen");
-  };
-  const btnIngresarOnPress = function () {
-    if (usuario && contrasena) {
-      setUser(usuario); // Guarda el nombre de usuario en el contexto
-      navigation.replace("HomeScreen");
+  const btnRegistrarOnPress = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Por favor complete todos los campos");
       return;
     }
-    Alert.alert("Fallido", "Datos incorrectos...");
+
+    try {
+      // Agregar el usuario a Firebase Firestore
+      const docRef = await addDoc(collection(db, "registro"), {
+        email,
+        password, // Considera usar un hash para la contraseña en un entorno real
+      });
+      console.log("Usuario registrado con ID: ", docRef.id);
+      Alert.alert("Registro exitoso", "Usuario registrado con éxito.");
+      navigation.navigate("Login"); // Redirigir al login
+    } catch (e) {
+      console.error("Error al registrar el usuario: ", e);
+      Alert.alert("Error", "Hubo un problema al registrar el usuario.");
+    }
   };
 
   return (
@@ -49,14 +57,15 @@ function Login({ navigation }: LoginProps): React.JSX.Element {
         <Image style={styles.logo} source={logo2} />
       </View>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Iniciar Sesión</Text>
+        <Text style={styles.title}>Registro</Text>
         <View style={styles.inputContainer}>
           <Icon name="envelope" type="font-awesome" size={20} color="#828894" />
           <TextInput
             style={styles.textInput}
             placeholder="Correo Electrónico"
             placeholderTextColor="#828894"
-            onChangeText={(u) => setUsuario(u)}
+            onChangeText={(e) => setEmail(e)}
+            value={email}
             keyboardType="email-address"
           />
         </View>
@@ -67,36 +76,22 @@ function Login({ navigation }: LoginProps): React.JSX.Element {
             placeholder="Contraseña"
             placeholderTextColor="#828894"
             secureTextEntry={true}
-            onChangeText={(p) => setContrasena(p)}
+            onChangeText={(p) => setPassword(p)}
+            value={password}
           />
         </View>
-
-        <TouchableOpacity style={styles.buttonRegister} onPress={btnRegister}>
-          <Text style={styles.register}>
-            ¿No tienes cuenta?
-            <Text style={styles.buttonTextRegister}> Crea una...</Text>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={btnIngresarOnPress}>
-          <Text style={styles.buttonText}>Ingresar</Text>
+        <TouchableOpacity style={styles.button} onPress={btnRegistrarOnPress}>
+          <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#323844",
-  },
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    // flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   logoContainer: {
     alignItems: "center",
@@ -109,7 +104,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 20,
     marginLeft: 20,
-    // marginHorizontal: ,
     marginTop: 20,
   },
   title: {
@@ -117,7 +111,6 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 25,
   },
-
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -147,20 +140,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "white",
   },
-  register: {
-    fontSize: 15,
-    color: "white",
-    marginBottom: 10,
-  },
-  buttonTextRegister: {
-    fontSize: 15,
-    color: "#0270ff",
-  },
-  buttonRegister: {
-    alignItems: "center",
-    width: "70%",
-    marginBottom: 10,
-  },
   logo: {
     width: 200,
     height: 200,
@@ -169,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default RegisterScreen;

@@ -1,3 +1,4 @@
+// Importar useState y useNavigation...
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -8,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ActivityIndicator, // Para mostrar feedback de carga
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -16,14 +18,14 @@ import { RootStackParamList } from "../../App";
 import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-const logo2 = require("../../imagenes/logo2.png"); //Logo
-
 const NoticeScreen = (): React.JSX.Element => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false); // Estado para mostrar loading
+  const [showDatePicker, setShowDatePicker] = useState(false); // Estado para el selector de fecha
 
   const guardarForo = async () => {
     if (!title || !author || !date || !description) {
@@ -31,11 +33,12 @@ const NoticeScreen = (): React.JSX.Element => {
       return;
     }
     try {
+      setLoading(true); // Iniciar loading
       const docRef = await addDoc(collection(db, "esport"), {
-        title: title,
-        author: author,
-        date: date,
-        description: description,
+        title,
+        author,
+        date,
+        description,
       });
       console.log("Documento escrito con ID: ", docRef.id);
       Alert.alert("E-sport agregada", "La E-sport ha sido agregada con éxito.");
@@ -43,9 +46,11 @@ const NoticeScreen = (): React.JSX.Element => {
       setAuthor("");
       setDate("");
       setDescription("");
+      setLoading(false); // Finalizar loading
       navigation.goBack();
     } catch (e) {
       console.error("Error al agregar el documento: ", e);
+      setLoading(false); // Finalizar loading en caso de error
       Alert.alert("Error", "Hubo un problema al agregar el E-sport.");
     }
   };
@@ -54,13 +59,14 @@ const NoticeScreen = (): React.JSX.Element => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.container}>
-          <Image style={styles.logo} source={logo2} />
+          <Image style={styles.logo} source={require("../../imagenes/logo2.png")} />
           <Text style={styles.tittle}>AGREGAR E-SPORT</Text>
           <View style={styles.formContainer}>
-            <Text style={styles.label}>Titulo</Text>
+            
+            <Text style={styles.label}>Título</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="Título de la noticia"
+              placeholder="Título del E-Sport"
               value={title}
               onChangeText={setTitle}
             />
@@ -72,36 +78,41 @@ const NoticeScreen = (): React.JSX.Element => {
               onChangeText={setAuthor}
             />
             <Text style={styles.label}>Fecha</Text>
-            <TextInput
+            <TouchableOpacity
               style={styles.textInput}
-              value={date}
-              onChangeText={setDate}
-              placeholder="Fecha (YYYY-MM-DD)"
-            />
-            {/* <TouchableOpacity
               onPress={() => setShowDatePicker(true)}
-              style={styles.textInput}
             >
-              <Text style={styles.dateText}>{date.toDateString()}</Text>
+              <Text style={styles.dateText}>
+                {date ? date : "Fecha del E-Sport"}
+              </Text>
             </TouchableOpacity>
             {showDatePicker && (
               <DateTimePicker
-                value={date}
+                value={new Date()}
                 mode="date"
                 display="default"
-                onChange={handleDateChange}
+                onChange={(event, selectedDate) => {
+                  setShowDatePicker(false);
+                  const currentDate = selectedDate || new Date();
+                  setDate(currentDate.toISOString().split("T")[0]); // Formato YYYY-MM-DD
+                }}
               />
-            )} */}
+            )}
+            <Text style={styles.label}>Descripción</Text>
             <TextInput
               style={[styles.textInput, styles.textArea]}
-              placeholder="Descripción"
+              placeholder="Descripción del E-Sport"
               value={description}
               onChangeText={setDescription}
               multiline
               numberOfLines={4}
             />
-            <TouchableOpacity style={styles.button} onPress={guardarForo}>
-              <Text style={styles.buttonText}>Agregar E-Sport</Text>
+            <TouchableOpacity style={styles.button} onPress={guardarForo} disabled={loading}>
+              {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text style={styles.buttonText}>Agregar E-Sport</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>

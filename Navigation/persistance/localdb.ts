@@ -37,6 +37,17 @@ export default class LocalDB {
         () => console.log('CREATED TABLE esport'),
         error => console.error({error}),
       );
+      tx.executeSql(
+        `CREATE TABLE IF NOT EXISTS registro (
+            id              INTEGER           PRIMARY KEY       AUTOINCREMENT,
+            email           VARCHAR(64)       NOT NULL,
+            password          VARCHAR(64)       NOT NULL
+          );`,
+          
+        [],
+        () => console.log('CREATED TABLE registro'),
+        error => console.error({error}),
+      );
     });
   }
 }

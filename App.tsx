@@ -23,6 +23,7 @@ import CategoryScreen from "./Navigation/Screens/CategoryScreen";
 import ContactScreen from "./Navigation/Screens/ContactScreen";
 import NoticeScreen from "./Navigation/Screens/NoticeScreen";
 import EsportsScreen from "./Navigation/Screens/EsportsScreen";
+import RegisterScreen from "./Navigation/Screens/RegisterScreen";
 import { UserProvider } from "./Navigation/Screens/UserContext";
 import DetailsScreen, {Params as ProductDetailsParams} from "./Navigation/Screens/DetailsScreen";
 import DetailsScreenDos, {Params as ProductDetailsParamsDos} from "./Navigation/Screens/DetailsScreenDos";
@@ -44,6 +45,7 @@ export type RootStackParamList = {
   EsportsScreen: undefined;
   DetailsScreen: ProductDetailsParams;
   DetailsScreenDos: ProductDetailsParamsDos;
+  RegisterScreen: undefined;
 };
 
 // Componente principal
@@ -67,6 +69,7 @@ const App = (): React.JSX.Element => {
               <Stack.Screen name="EsportsScreen" component={EsportsScreen} />
               <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
               <Stack.Screen name="DetailsScreenDos" component={DetailsScreenDos} />
+              <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </UserProvider>
