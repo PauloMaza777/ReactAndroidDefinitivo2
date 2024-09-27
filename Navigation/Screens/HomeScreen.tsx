@@ -137,9 +137,11 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
     });
   }, [navigation]);
 
-  const navigationView = () => (
-    <SafeAreaView style={styles.safeAreaNavigation}>
-      <View style={[styles.drawerContent, styles.navigationContainer]}>
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container3}>
+        {/* Comentar el touchable en caso de no necesitar la pantalla de UserScreen */}
+
         <TouchableOpacity
           style={styles.drawerButton}
           onPress={() => {
@@ -160,140 +162,135 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
         </TouchableOpacity>
       </View>
 
-      <View
-        style={[
-          styles.drawerContent2,
-          styles.navigationContainer,
-          styles.IconStyle,
-        ]}
-      >
+      <View style={styles.container}>
+        <Image style={styles.logo} source={logo2} />
+      </View>
+      <View style={styles.container2}>
+        <Text style={styles.buttonTextT}>NOTICIAS</Text>
         <TouchableOpacity
-          style={styles.drawerButton}
+          style={styles.button}
           onPress={() => {
-            navigation.navigate("GroupScreen");
+            navigation.navigate("NoticeScreen");
           }}
         >
-          <Icon type="material" name="group" size={30} color="#ffffffA0" />
-          <Text style={styles.drawerButtonText}>Comunidad</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.drawerButton}
-          onPress={() => {
-            navigation.navigate("ForoScreen");
-          }}
-        >
-          <Icon type="material" name="campaign" size={30} color="#ffffffA0" />
-          <Text style={styles.drawerButtonText}>Foros</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.drawerButton}
-          onPress={() => {
-            navigation.navigate("LibraryScreen");
-          }}
-        >
-          <Icon type="material" name="menu-book" size={30} color="#ffffffA0" />
-          <Text style={styles.drawerButtonText}>Biblioteca</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.drawerButton}
-          onPress={() => {
-            navigation.navigate("CategoryScreen");
-          }}
-        >
-          <Icon type="material" name="category" size={30} color="#ffffffA0" />
-          <Text style={styles.drawerButtonText}>Categorías</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.drawerButton}
-          onPress={() => {
-            navigation.navigate("SettingsScreen");
-          }}
-        >
-          <Icon type="material" name="settings" size={30} color="#ffffffA0" />
-          <Text style={styles.drawerButtonText}>Configuración</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.contactUser}
-          onPress={() => {
-            navigation.navigate("ContactScreen");
-          }}
-        >
-          <Icon
-            type="material"
-            name="notifications-active"
-            size={30}
-            color="#ffffffA0"
-          />
-          <Text style={styles.drawerButtonText}>Contacto</Text>
+          <Text style={styles.buttonText}>Agregar Tema</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
-  );
-
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <DrawerLayoutAndroid
-        ref={drawerRef}
-        drawerWidth={300}
-        renderNavigationView={navigationView}
-      >
+      <FlatList
+        data={notices}
+        style={styles.lista}
+        renderItem={noticeItem}
+        keyExtractor={(item) => item.id}
+      />
+      <View style={styles.container2}>
+        <Text style={styles.buttonTextT}>E-SPORTS</Text>
         <TouchableOpacity
-          style={styles.drawerButton}
-          onPress={() => drawerRef.current?.openDrawer()}
+          style={styles.button}
+          onPress={() => {
+            navigation.navigate("EsportsScreen");
+          }}
         >
-          <Icon type="material" name="density-medium" size={30} color="black" />
+          <Text style={styles.buttonText}>Agregar Tema</Text>
         </TouchableOpacity>
-        <View style={styles.container}>
-          <Image style={styles.logo} source={logo2} />
-        </View>
-        <View style={styles.container2}>
-          <Text style={styles.buttonTextT}>NOTICIAS</Text>
-          <TouchableOpacity
-            style={styles.button}
+      </View>
+      <FlatList
+        data={esports}
+        style={styles.lista}
+        renderItem={esportItem}
+        keyExtractor={(item) => item.id}
+      />
+
+      {/* Desde aqui comienza los botones que antes estaban en el drawerLayoutAndroid */}
+
+        {/* <View
+          style={[
+            styles.drawerContent2,
+            styles.navigationContainer,
+            styles.IconStyle,
+          ]}
+        > */}
+        {/* <TouchableOpacity
+            style={styles.drawerButton}
             onPress={() => {
-              navigation.navigate("NoticeScreen");
+              navigation.navigate("GroupScreen");
             }}
           >
-            <Text style={styles.buttonText}>Agregar Tema</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          data={notices}
-          style={styles.lista}
-          renderItem={noticeItem}
-          keyExtractor={(item) => item.id}
-        />
-        <View style={styles.container2}>
-          <Text style={styles.buttonTextT}>E-SPORTS</Text>
-          <TouchableOpacity
-            style={styles.button}
+            <Icon type="material" name="group" size={30} color="#ffffffA0" />
+            <Text style={styles.drawerButtonText}>Comunidad</Text>
+          </TouchableOpacity> */}
+
+        {/* <TouchableOpacity
+            style={styles.drawerButton}
             onPress={() => {
-              navigation.navigate("EsportsScreen");
+              navigation.navigate("ForoScreen");
             }}
           >
-            <Text style={styles.buttonText}>Agregar Tema</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          data={esports}
-          style={styles.lista}
-          renderItem={esportItem}
-          keyExtractor={(item) => item.id}
-        />
-      </DrawerLayoutAndroid>
+            <Icon type="material" name="campaign" size={30} color="#ffffffA0" />
+            <Text style={styles.drawerButtonText}>Foros</Text>
+          </TouchableOpacity> */}
+
+        {/* <TouchableOpacity
+            style={styles.drawerButton}
+            onPress={() => {
+              navigation.navigate("LibraryScreen");
+            }}
+          >
+            <Icon
+              type="material"
+              name="menu-book"
+              size={30}
+              color="#ffffffA0"
+            />
+            <Text style={styles.drawerButtonText}>Biblioteca</Text>
+          </TouchableOpacity> */}
+
+        {/* </View> */}
+        <View style={styles.bottomNavBar}>
+    <TouchableOpacity
+      style={styles.navButton}
+      onPress={() => {
+        navigation.navigate("CategoryScreen");
+      }}
+    >
+      <Icon type="material" name="category" size={30} color="#0000009f" />
+      <Text style={styles.navButtonText}>Categorías</Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      style={styles.navButton}
+      onPress={() => {
+        navigation.navigate("SettingsScreen");
+      }}
+    >
+      <Icon type="material" name="settings" size={30} color="#0000009f" />
+      <Text style={styles.navButtonText}>Configuración</Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      style={styles.navButton}
+      onPress={() => {
+        navigation.navigate("ContactScreen");
+      }}
+    >
+      <Icon type="material" name="notifications-active" size={30} color="#0000009f" />
+      <Text style={styles.navButtonText}>Contacto</Text>
+    </TouchableOpacity>
+  </View>
+      
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+
   safeArea: {
     flex: 1,
     backgroundColor: "#527a8d",
   },
   safeAreaNavigation: {
-    flex: 1,
-    backgroundColor: "#5d8da2",
+    flex: 0,
+    backgroundColor: "#ffffff",
+    marginTop: 105,
   },
   container: {
     height: "20%",
@@ -308,6 +305,26 @@ const styles = StyleSheet.create({
   container2: {
     flexDirection: "row",
     justifyContent: "space-around",
+    alignItems: "center",
+  },
+  container3: {
+    flexDirection: "row",
+    // justifyContent: "space-around",
+    alignItems: "center",
+  },
+  container4: {
+    flexDirection: "row",
+    // justifyContent: "space-around",
+    alignItems: "center",
+  },
+  container5: {
+    flexDirection: "column",
+    // justifyContent: "space-around",
+    alignItems: "center",
+  },
+  container6: {
+    flexDirection: "row-reverse",
+    // justifyContent: "space-around",
     alignItems: "center",
   },
   button: {
@@ -331,7 +348,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   drawerContent: {
-    marginTop: 200,
+    marginTop: 2,
     marginBottom: 50,
     justifyContent: "center",
     alignItems: "center",
@@ -345,18 +362,18 @@ const styles = StyleSheet.create({
   drawerButton: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   drawerButtonText: {
     marginLeft: 20,
     fontSize: 18,
-    color: "#ffffffA0",
+    color: "#0000009f",
   },
   IconStyle: {
     marginLeft: 10,
   },
   contactUser: {
-    marginTop: 65,
+    marginTop: 0,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -397,6 +414,23 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginRight: 10,
     backgroundColor: "#5d8da2",
+  },
+  bottomNavBar: {
+    flexDirection: 'row',        // Aligns items horizontally
+    justifyContent: 'space-around', // Spreads the buttons evenly
+    position: 'absolute',        // Sticks the view at the bottom
+    bottom: 0,                   // At the very bottom of the screen
+    width: '100%',               // Takes the full width
+    backgroundColor: '#ffffff',  // Sets background color
+    paddingVertical: 10,         // Adds padding for better touch area
+  },
+  navButton: {
+    alignItems: 'center',        // Centers the icon and text vertically
+  },
+  navButtonText: {
+    fontSize: 12,
+    color: '#0000009f',
+    marginTop: 5,               // Adds a small gap between icon and text
   },
 });
 
