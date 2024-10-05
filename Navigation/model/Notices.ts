@@ -1,3 +1,6 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para la asignación de los tipos de datos a las variables
+
 export interface Notice {
   id: any;
   title: String;

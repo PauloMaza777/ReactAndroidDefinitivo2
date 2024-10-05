@@ -1,7 +1,12 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para que el usuario vea las configuraciónes generales de la aplicación
+
 import React from 'react';
 import { StyleSheet, Text, View, Switch, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
 
+
+//Componente principal SettingsScreen
 const SettingsScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
@@ -25,6 +30,7 @@ const SettingsScreen = () => {
     );
   };
 
+ //Renderizar la interfaz para ver las configuraciones principales
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Settings</Text>
@@ -50,6 +56,7 @@ const SettingsScreen = () => {
   );
 }
 
+// Estilos para los componentes visuales de la pantalla
 export default SettingsScreen;
 
 const styles = StyleSheet.create({
@@ -77,3 +84,5 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 });
+
+// Paulo Esteban Maza Rivera - 20460351

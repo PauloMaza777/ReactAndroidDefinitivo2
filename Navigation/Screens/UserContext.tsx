@@ -1,3 +1,7 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para recuperar el correo del usuario que se utilizo cuando inicio 
+// sesión la cual sera mostrada en el HomeScreen
+
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 type UserContextType = {
@@ -10,6 +14,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<string | null>(null);
 
+   //Renderizar la interfaz 
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}
@@ -24,3 +29,5 @@ export const useUser = (): UserContextType => {
   }
   return context;
 };
+
+// Paulo Esteban Maza Rivera - 20460351

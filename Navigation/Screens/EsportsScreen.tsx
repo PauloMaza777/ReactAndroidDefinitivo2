@@ -1,4 +1,6 @@
-// Importar useState y useNavigation...
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para que el usuario realice una publicación sobre los E-Sports
+
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -18,7 +20,8 @@ import { RootStackParamList } from "../../App";
 import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-const NoticeScreen = (): React.JSX.Element => {
+//Componente principal EsportsScreen
+const EsportsScreen = (): React.JSX.Element => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -27,6 +30,7 @@ const NoticeScreen = (): React.JSX.Element => {
   const [loading, setLoading] = useState(false); // Estado para mostrar loading
   const [showDatePicker, setShowDatePicker] = useState(false); // Estado para el selector de fecha
 
+  //Metodo POST para el guardado de los datos de los E-Sport
   const guardarForo = async () => {
     if (!title || !author || !date || !description) {
       Alert.alert("Error", "Por favor complete todos los campos");
@@ -55,14 +59,17 @@ const NoticeScreen = (): React.JSX.Element => {
     }
   };
 
+  //Renderizar la interfaz con los detalles para agregar una publicación sobre los E-Sports
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.container}>
-          <Image style={styles.logo} source={require("../../imagenes/logo2.png")} />
+          <Image
+            style={styles.logo}
+            source={require("../../imagenes/logo2.png")}
+          />
           <Text style={styles.tittle}>AGREGAR E-SPORT</Text>
           <View style={styles.formContainer}>
-            
             <Text style={styles.label}>Título</Text>
             <TextInput
               style={styles.textInput}
@@ -107,7 +114,11 @@ const NoticeScreen = (): React.JSX.Element => {
               multiline
               numberOfLines={4}
             />
-            <TouchableOpacity style={styles.button} onPress={guardarForo} disabled={loading}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={guardarForo}
+              disabled={loading}
+            >
               {loading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
@@ -121,8 +132,9 @@ const NoticeScreen = (): React.JSX.Element => {
   );
 };
 
-export default NoticeScreen;
+export default EsportsScreen;
 
+// Estilos para los componentes visuales de la pantalla
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -189,3 +201,5 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
+
+// Paulo Esteban Maza Rivera - 20460351

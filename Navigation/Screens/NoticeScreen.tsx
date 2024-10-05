@@ -1,3 +1,6 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para que el usuario realice una publicación sobre Noticias de videojuegos
+
 import React, { useState } from "react";
 import {
   View,
@@ -19,6 +22,7 @@ import { collection, addDoc } from "firebase/firestore";
 
 const logo2 = require("../../imagenes/logo2.png"); //Logo
 
+//Componente principal NoticeScreen
 const NoticeScreen = (): React.JSX.Element => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [title, setTitle] = useState("");
@@ -28,6 +32,7 @@ const NoticeScreen = (): React.JSX.Element => {
   const [loading, setLoading] = useState(false); // Estado para mostrar loading
   const [showDatePicker, setShowDatePicker] = useState(false); // Estado para el selector de fecha
 
+    //Metodo POST para el guardado de los datos de las noticias
   const guardarForo = async () => {
     if (!title || !author || !date || !description) {
       Alert.alert("Error", "Por favor complete todos los campos");
@@ -56,6 +61,7 @@ const NoticeScreen = (): React.JSX.Element => {
     }
   };
 
+  //Renderizar la interfaz con los detalles para agregar una publicación sobre las noticias
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -122,6 +128,7 @@ const NoticeScreen = (): React.JSX.Element => {
   );
 };
 
+// Estilos para los componentes visuales de la pantalla
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
@@ -196,3 +203,5 @@ const styles = StyleSheet.create({
 });
 
 export default NoticeScreen;
+
+// Paulo Esteban Maza Rivera - 20460351

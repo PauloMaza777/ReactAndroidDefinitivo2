@@ -1,3 +1,6 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para que el usuario se registre con un correo personal y una contraseña
+
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -11,21 +14,22 @@ import {
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Icon } from "react-native-elements";
-import { db } from "../../firebase"; // Asegúrate de que la configuración de Firebase esté correcta
+import { db } from "../../firebase"; 
 import { collection, addDoc } from "firebase/firestore";
 
 type RootStackParamList = {
   HomeScreen: undefined;
   Login: undefined;
-  Register: undefined; // Asegúrate de añadir esta línea
+  Register: undefined; 
 };
 
 type RegisterProps = {
   navigation: StackNavigationProp<RootStackParamList, "Login">; // Navegación hacia la pantalla de login
 };
 
-const logo2 = require("../../imagenes/logo2.png"); // Logo
+const logo2 = require("../../imagenes/logo2.png"); //Importamos el Logo para usarlo
 
+//Componente principal RegisterScreen
 const RegisterScreen = ({ navigation }: RegisterProps): React.JSX.Element => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,6 +55,7 @@ const RegisterScreen = ({ navigation }: RegisterProps): React.JSX.Element => {
     }
   };
 
+  //Renderizar la interfaz para realizar el registro del usuario
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.logoContainer}>
@@ -88,6 +93,7 @@ const RegisterScreen = ({ navigation }: RegisterProps): React.JSX.Element => {
   );
 };
 
+// Estilos para los componentes visuales de la pantalla
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -149,3 +155,5 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterScreen;
+
+// Paulo Esteban Maza Rivera - 20460351

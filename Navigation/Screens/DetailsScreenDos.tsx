@@ -1,12 +1,24 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para que el usuario vea los detalles en específico de alguna publicación de E-Sports con sus comentarios
+
 import React, { useEffect, useState } from "react";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { SafeAreaView, StyleSheet, Text, View, Image, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { Esport } from "../model/Esport";
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Importar AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Importar AsyncStorage
 
-const logo2 = require("../../imagenes/logo2.png"); //Logo
+const logo2 = require("../../imagenes/logo2.png"); //Importamos el Logo para usarlo
 
 export type Params = {
   esport: Esport;
@@ -30,7 +42,9 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
   // Cargar comentarios de AsyncStorage
   const loadComments = async () => {
     try {
-      const savedComments = await AsyncStorage.getItem(`comments-${route.params.esport.id}`);
+      const savedComments = await AsyncStorage.getItem(
+        `comments-${route.params.esport.id}`
+      );
       if (savedComments !== null) {
         setComments(JSON.parse(savedComments));
       }
@@ -42,7 +56,10 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
   // Guardar comentarios en AsyncStorage
   const saveComments = async (newComments: string[]) => {
     try {
-      await AsyncStorage.setItem(`comments-${route.params.esport.id}`, JSON.stringify(newComments));
+      await AsyncStorage.setItem(
+        `comments-${route.params.esport.id}`,
+        JSON.stringify(newComments)
+      );
     } catch (error) {
       console.log("Error al guardar los comentarios:", error);
     }
@@ -58,6 +75,7 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
     }
   };
 
+  //Renderizar la interfaz con los detalles de la publicación con los comentarios hechos anteriormente
   return (
     <SafeAreaView style={styles.safeArea}>
       {esport && (
@@ -68,13 +86,14 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
             <Text style={styles.textInput}>TITULO: {esport.title}</Text>
             <Text style={styles.textInput}>AUTOR: {esport.author}</Text>
             <Text style={styles.textInput}>FECHA: {esport.date}</Text>
-            <Text style={styles.textInput}>DESCRIPCIÓN: {esport.description}</Text>
+            <Text style={styles.textInput}>DESCRIPCIÓN: {esport.description}
+            </Text>
           </View>
 
           {/* Sección de comentarios */}
           <View style={styles.commentSection}>
             <Text style={styles.commentTitle}>Comentarios</Text>
-            
+
             <TextInput
               style={styles.commentInput}
               placeholder="Escribe un comentario..."
@@ -82,8 +101,11 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
               value={comment}
               onChangeText={setComment}
             />
-            
-            <TouchableOpacity style={styles.commentButton} onPress={handleAddComment}>
+
+            <TouchableOpacity
+              style={styles.commentButton}
+              onPress={handleAddComment}
+            >
               <Text style={styles.commentButtonText}>Enviar Comentario</Text>
             </TouchableOpacity>
 
@@ -104,6 +126,7 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
   );
 }
 
+// Estilos para los componentes visuales de la pantalla
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
@@ -175,3 +198,5 @@ const styles = StyleSheet.create({
 });
 
 export default DetailsScreen;
+
+// Paulo Esteban Maza Rivera - 20460351

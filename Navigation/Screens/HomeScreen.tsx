@@ -1,3 +1,6 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz principal en donde se mostraran todos los componentes utilizados
+
 import React, { useEffect, useRef, useState } from "react";
 import {
   DrawerLayoutAndroid,
@@ -35,6 +38,7 @@ interface Notice {
   date: string;
   description: string;
 }
+// Modelo de E-sport
 interface Esport {
   id: string;
   title: string;
@@ -43,7 +47,7 @@ interface Esport {
   description: string;
 }
 
-// Componente principal
+// Componente principal HomeScreen
 function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
   const drawerRef = useRef<DrawerLayoutAndroid>(null);
   const { user } = useUser();
@@ -81,6 +85,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
     </TouchableOpacity>
   );
 
+  // useEffect para mostrar las publicaciónes de la colección noticias
   useEffect(() => {
     const fetchNotices = async () => {
       try {
@@ -109,6 +114,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
     });
   }, [navigation]);
 
+  // useEffect para mostrar las publicaciónes de la colección E-Sport
   useEffect(() => {
     const fetchEsports = async () => {
       try {
@@ -137,11 +143,10 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
     });
   }, [navigation]);
 
+  // Renderizar la interfaz con todos los componentes y con los datos de la base de datos
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container3}>
-        {/* Comentar el touchable en caso de no necesitar la pantalla de UserScreen */}
-
         <TouchableOpacity
           style={styles.drawerButton}
           onPress={() => {
@@ -202,14 +207,14 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
 
       {/* Desde aqui comienza los botones que antes estaban en el drawerLayoutAndroid */}
 
-        {/* <View
+      {/* <View
           style={[
             styles.drawerContent2,
             styles.navigationContainer,
             styles.IconStyle,
           ]}
         > */}
-        {/* <TouchableOpacity
+      {/* <TouchableOpacity
             style={styles.drawerButton}
             onPress={() => {
               navigation.navigate("GroupScreen");
@@ -219,7 +224,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             <Text style={styles.drawerButtonText}>Comunidad</Text>
           </TouchableOpacity> */}
 
-        {/* <TouchableOpacity
+      {/* <TouchableOpacity
             style={styles.drawerButton}
             onPress={() => {
               navigation.navigate("ForoScreen");
@@ -229,7 +234,7 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             <Text style={styles.drawerButtonText}>Foros</Text>
           </TouchableOpacity> */}
 
-        {/* <TouchableOpacity
+      {/* <TouchableOpacity
             style={styles.drawerButton}
             onPress={() => {
               navigation.navigate("LibraryScreen");
@@ -244,45 +249,49 @@ function HomeScreen({ navigation }: HomeProps): React.JSX.Element {
             <Text style={styles.drawerButtonText}>Biblioteca</Text>
           </TouchableOpacity> */}
 
-        {/* </View> */}
-        <View style={styles.bottomNavBar}>
-    <TouchableOpacity
-      style={styles.navButton}
-      onPress={() => {
-        navigation.navigate("CategoryScreen");
-      }}
-    >
-      <Icon type="material" name="category" size={30} color="#0000009f" />
-      <Text style={styles.navButtonText}>Categorías</Text>
-    </TouchableOpacity>
+      {/* </View> */}
+      <View style={styles.bottomNavBar}>
+        <TouchableOpacity
+          style={styles.navButton}
+          onPress={() => {
+            navigation.navigate("CategoryScreen");
+          }}
+        >
+          <Icon type="material" name="category" size={30} color="#0000009f" />
+          <Text style={styles.navButtonText}>Categorías</Text>
+        </TouchableOpacity>
 
-    <TouchableOpacity
-      style={styles.navButton}
-      onPress={() => {
-        navigation.navigate("SettingsScreen");
-      }}
-    >
-      <Icon type="material" name="settings" size={30} color="#0000009f" />
-      <Text style={styles.navButtonText}>Configuración</Text>
-    </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.navButton}
+          onPress={() => {
+            navigation.navigate("SettingsScreen");
+          }}
+        >
+          <Icon type="material" name="settings" size={30} color="#0000009f" />
+          <Text style={styles.navButtonText}>Configuración</Text>
+        </TouchableOpacity>
 
-    <TouchableOpacity
-      style={styles.navButton}
-      onPress={() => {
-        navigation.navigate("ContactScreen");
-      }}
-    >
-      <Icon type="material" name="notifications-active" size={30} color="#0000009f" />
-      <Text style={styles.navButtonText}>Contacto</Text>
-    </TouchableOpacity>
-  </View>
-      
+        <TouchableOpacity
+          style={styles.navButton}
+          onPress={() => {
+            navigation.navigate("ContactScreen");
+          }}
+        >
+          <Icon
+            type="material"
+            name="notifications-active"
+            size={30}
+            color="#0000009f"
+          />
+          <Text style={styles.navButtonText}>Contacto</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
+// Estilos para los componentes visuales de la pantalla
 const styles = StyleSheet.create({
-
   safeArea: {
     flex: 1,
     backgroundColor: "#527a8d",
@@ -309,22 +318,18 @@ const styles = StyleSheet.create({
   },
   container3: {
     flexDirection: "row",
-    // justifyContent: "space-around",
     alignItems: "center",
   },
   container4: {
     flexDirection: "row",
-    // justifyContent: "space-around",
     alignItems: "center",
   },
   container5: {
     flexDirection: "column",
-    // justifyContent: "space-around",
     alignItems: "center",
   },
   container6: {
     flexDirection: "row-reverse",
-    // justifyContent: "space-around",
     alignItems: "center",
   },
   button: {
@@ -416,22 +421,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#5d8da2",
   },
   bottomNavBar: {
-    flexDirection: 'row',        // Aligns items horizontally
-    justifyContent: 'space-around', // Spreads the buttons evenly
-    position: 'absolute',        // Sticks the view at the bottom
-    bottom: 0,                   // At the very bottom of the screen
-    width: '100%',               // Takes the full width
-    backgroundColor: '#ffffff',  // Sets background color
-    paddingVertical: 10,         // Adds padding for better touch area
+    flexDirection: "row",
+    justifyContent: "space-around",
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "#ffffff",
+    paddingVertical: 10,
   },
   navButton: {
-    alignItems: 'center',        // Centers the icon and text vertically
+    alignItems: "center",
   },
   navButtonText: {
     fontSize: 12,
-    color: '#0000009f',
-    marginTop: 5,               // Adds a small gap between icon and text
+    color: "#0000009f",
+    marginTop: 5,
   },
 });
 
 export default HomeScreen;
+
+// Paulo Esteban Maza Rivera - 20460351

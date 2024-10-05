@@ -1,12 +1,24 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para que el usuario vea los detalles en específico de alguna publicación de noticias con sus comentarios
+
 import React, { useEffect, useState } from "react";
 import { Notice } from "../model/Notices";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { SafeAreaView, StyleSheet, Text, View, Image, ScrollView, TextInput, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Importar AsyncStorage
 
-const logo2 = require("../../imagenes/logo2.png"); //Logo
+const logo2 = require("../../imagenes/logo2.png"); //Importamos el Logo para usarlo
 
 export type Params = {
   notice: Notice;
@@ -17,6 +29,7 @@ export type Props = {
   navigation: StackNavigationProp<RootStackParamList, "DetailsScreen">;
 };
 
+// Componente principal DetailsScreen
 function DetailsScreen({ route }: Props): React.JSX.Element {
   const [notice, setNotice] = useState<Notice>();
   const [comment, setComment] = useState(""); // Estado para el nuevo comentario
@@ -30,7 +43,9 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
   // Cargar comentarios de AsyncStorage
   const loadComments = async () => {
     try {
-      const savedComments = await AsyncStorage.getItem(`comments-${route.params.notice.id}`);
+      const savedComments = await AsyncStorage.getItem(
+        `comments-${route.params.notice.id}`
+      );
       if (savedComments !== null) {
         setComments(JSON.parse(savedComments));
       }
@@ -39,10 +54,13 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
     }
   };
 
-  // Guardar comentarios en AsyncStorage
+  // Guardar comentarios en AsyncStorage para que aparezcan de manera local
   const saveComments = async (newComments: string[]) => {
     try {
-      await AsyncStorage.setItem(`comments-${route.params.notice.id}`, JSON.stringify(newComments));
+      await AsyncStorage.setItem(
+        `comments-${route.params.notice.id}`,
+        JSON.stringify(newComments)
+      );
     } catch (error) {
       console.log("Error al guardar los comentarios:", error);
     }
@@ -58,6 +76,7 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
     }
   };
 
+  //Renderizar la interfaz con los detalles de la publicación con los comentarios hechos anteriormente
   return (
     <SafeAreaView style={styles.safeArea}>
       {notice && (
@@ -68,13 +87,15 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
             <Text style={styles.textInput}>TITULO: {notice.title}</Text>
             <Text style={styles.textInput}>AUTOR: {notice.author}</Text>
             <Text style={styles.textInput}>FECHA: {notice.date}</Text>
-            <Text style={styles.textInput}>DESCRIPCIÓN: {notice.description}</Text>
+            <Text style={styles.textInput}>
+              DESCRIPCIÓN: {notice.description}
+            </Text>
           </View>
 
           {/* Sección de comentarios */}
           <View style={styles.commentSection}>
             <Text style={styles.commentTitle}>Comentarios</Text>
-            
+
             <TextInput
               style={styles.commentInput}
               placeholder="Escribe un comentario..."
@@ -82,8 +103,11 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
               value={comment}
               onChangeText={setComment}
             />
-            
-            <TouchableOpacity style={styles.commentButton} onPress={handleAddComment}>
+
+            <TouchableOpacity
+              style={styles.commentButton}
+              onPress={handleAddComment}
+            >
               <Text style={styles.commentButtonText}>Enviar Comentario</Text>
             </TouchableOpacity>
 
@@ -104,6 +128,7 @@ function DetailsScreen({ route }: Props): React.JSX.Element {
   );
 }
 
+// Estilos para los componentes visuales de la pantalla
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
@@ -175,3 +200,5 @@ const styles = StyleSheet.create({
 });
 
 export default DetailsScreen;
+
+// Paulo Esteban Maza Rivera - 20460351

@@ -1,3 +1,6 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para que el usuario inicie sesión con una cuenta existente
+
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -26,8 +29,9 @@ type LoginProps = {
   navigation: StackNavigationProp<RootStackParamList, "HomeScreen">;
 };
 
-const logo2 = require("../../imagenes/logo2.png"); // Logo
+const logo2 = require("../../imagenes/logo2.png"); //Importamos el Logo para usarlo
 
+// Componente principal Login
 function Login({ navigation }: LoginProps): React.JSX.Element {
   const [usuario, setUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -77,6 +81,7 @@ function Login({ navigation }: LoginProps): React.JSX.Element {
     }
   };
 
+  // Renderizar la interfaz de los grupos disponibles
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.logoContainer}>
@@ -121,6 +126,7 @@ function Login({ navigation }: LoginProps): React.JSX.Element {
   );
 }
 
+// Estilos para los componentes visuales de la pantalla
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -196,3 +202,5 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+
+// Paulo Esteban Maza Rivera - 20460351

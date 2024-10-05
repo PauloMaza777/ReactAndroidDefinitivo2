@@ -1,3 +1,6 @@
+// Paulo Esteban Maza Rivera - 20460351
+// Interfaz para que el usuario llena sus datos principales de forma local
+
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -9,6 +12,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+//Componente principal UserScreen
 const UserScreen = () => {
   const [userData, setUserData] = useState({
     username: "",
@@ -53,6 +57,7 @@ const UserScreen = () => {
     setUserData((prevData) => ({ ...prevData, [key]: value }));
   };
 
+  //Renderizar la interfaz para mostrar el llenado de datos del usuario
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>User Profile</Text>
@@ -127,6 +132,7 @@ const UserScreen = () => {
 
 export default UserScreen;
 
+// Estilos para los componentes visuales de la pantalla
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -174,3 +180,5 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+
+// Paulo Esteban Maza Rivera - 20460351
